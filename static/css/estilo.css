@@ -1,0 +1,16 @@
+h1, h2, h3, h5 {
+  font-weight: bold;
+}
+
+.card-title {
+  font-size: 1.1rem;
+}
+
+section {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+footer h6 {
+  font-weight: bold;
+}
