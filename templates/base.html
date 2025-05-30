@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}CallMe - Soluções para Devs{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static 'myapp/css/estilo.css' %}" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light px-4">
+        <a class="navbar-brand" href="{% url 'home' %}">
+            <img src="{% static 'myapp/img/logo.png' %}" alt="Logo" height="40">
+        </a>
+        <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><a class="nav-link" href="#">Produtos</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Soluções</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Recursos</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Preços</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Suporte</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Entrar</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">🛒</a></li>
+        </ul>
+    </nav>
+
+    {% block content %}
+    {% endblock %}
+
+    <!-- Rodapé -->
+    <footer class="bg-dark text-white py-4">
+        <div class="container">
+            <div class="row text-center text-md-start">
+                <div class="col-md-3"><h6>Sobre</h6><p>História<br>Carreiras<br>Blog</p></div>
+                <div class="col-md-3"><h6>Produtos</h6><p>IDEs<br>Plugins<br>Educação</p></div>
+                <div class="col-md-3"><h6>Suporte</h6><p>Documentação<br>Tutoriais<br>Contato</p></div>
+                <div class="col-md-3"><h6>Redes Sociais</h6><p>🐦 🧑‍💼 🔗 🖼️</p></div>
+            </div>
+            <div class="text-center mt-3">© 2024 Todos os direitos reservados.</div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 
