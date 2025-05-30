@@ -16,10 +16,22 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from myapp.views import home, registro_usuario
+from django.contrib.auth.views import LogoutView
+from myapp.views import (
+    home, registro_usuario, admin_registro, admin_login,
+    admin_dashboard, usuario_editar, usuario_deletar
+)
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls),  # Django admin
     path('', home, name='home'),
     path('registro/', registro_usuario, name='registro_usuario'),
+    
+    # URLs do sistema administrativo personalizado
+    path('painel/registro/', admin_registro, name='admin_registro'),
+    path('painel/login/', admin_login, name='login'),
+    path('painel/logout/', LogoutView.as_view(), name='logout'),
+    path('painel/', admin_dashboard, name='admin_dashboard'),
+    path('painel/usuario/<int:pk>/editar/', usuario_editar, name='usuario_editar'),
+    path('painel/usuario/<int:pk>/deletar/', usuario_deletar, name='usuario_deletar'),
 ]
