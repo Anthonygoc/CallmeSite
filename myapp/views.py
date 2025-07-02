@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import login, authenticate
@@ -5,10 +6,16 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from .forms import UsuarioForm, AdminRegistrationForm, AdminLoginForm
-from .models import Usuario, Administrador
+from .models import Usuario, Administrador, Produto
+from django.shortcuts import redirect
+from .models import Produto
+
 
 def home(request):
-    return render(request, 'home.html')
+    # Filtra todos os produtos que estão marcados como 'disponivel'
+    produtos = Produto.objects.filter(disponivel=True)
+    # Envia a lista de produtos para o template com o nome 'produtos'
+    return render(request, 'home.html', {'produtos': produtos})
 
 def registro_usuario(request):
     if request.method == 'POST':
@@ -109,3 +116,31 @@ def usuario_deletar(request, pk):
     usuario.delete()
     messages.success(request, 'Usuário excluído com sucesso!')
     return redirect('admin_dashboard')
+
+def ver_carrinho(request):
+    # Por enquanto, só uma resposta simples para o teste funcionar
+    return HttpResponse("<h1>Página do Carrinho de Compras</h1><p>Em breve, seus produtos aparecerão aqui.</p>")
+
+def adicionar_ao_carrinho(request, produto_id):
+    # Lógica futura aqui
+    print(f"Adicionar produto com ID: {produto_id}")
+    return redirect('ver_carrinho')
+
+def remover_do_carrinho(request, produto_id):
+    # Lógica futura aqui
+    print(f"Remover produto com ID: {produto_id}")
+    return redirect('ver_carrinho')
+
+# --- VIEWS DO PAGAMENTO ---
+
+def checkout(request):
+    return HttpResponse("Página de Checkout")
+
+def pagamento_sucesso(request):
+    return HttpResponse("Pagamento aprovado!")
+
+def pagamento_falha(request):
+    return HttpResponse("Pagamento falhou.")
+
+def pagamento_pendente(request):
+    return HttpResponse("Pagamento pendente.")

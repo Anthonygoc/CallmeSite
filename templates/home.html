@@ -2,13 +2,12 @@
 {% load static %}
 
 {% block content %}
-  <!-- Hero -->
   <section class="container my-5">
     <div class="row align-items-center">
       <div class="col-md-6">
         <h1>Ferramentas Profissionais para Desenvolvedores</h1>
         <p class="lead">Aumente sua produtividade com nossas soluções inovadoras e eficientes</p>
-        <a href="#" class="btn btn-primary">Explorar Produtos</a>
+        <a href="#produtos" class="btn btn-primary">Explorar Produtos</a>
       </div>
       <div class="col-md-6">
         <img src="{% static 'myapp/img/hero.jpg' %}" alt="Hero" class="img-fluid rounded shadow-sm">
@@ -16,30 +15,56 @@
     </div>
   </section>
 
-  <!-- Produtos em destaque -->
-  <section class="bg-light py-5">
+  <section id="produtos" class="bg-light py-5">
     <div class="container">
       <h2 class="text-center mb-5">Produtos em Destaque</h2>
       <div class="row g-4">
-        {% comment %} Repetição de produto - pode vir do banco depois {% endcomment %}
+
+        {% comment %}
+          Início do loop dinâmico.
+          Isso irá repetir o bloco de código para cada 'produto' na lista 'produtos'
+          que a view 'home' envia para o template.
+        {% endcomment %}
+
+        {% for produto in produtos %}
         <div class="col-md-4">
           <div class="card h-100 shadow-sm">
-            <img src="{% static 'myapp/img/produto1.jpg' %}" class="card-img-top" alt="IDE Profissional">
-            <div class="card-body">
-              <h5 class="card-title">IDE Profissional</h5>
-              <p class="card-text">Ambiente de desenvolvimento com recursos avançados</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <strong class="text-primary">R$ 799,00</strong>
-                <a href="#" class="btn btn-sm btn-primary">Comprar Agora</a>
+
+            {% comment %} Exibe a imagem do produto ou uma imagem padrão {% endcomment %}
+            {% if produto.imagem %}
+              <img src="{{ produto.imagem.url }}" class="card-img-top" alt="{{ produto.nome }}">
+            {% else %}
+              <img src="{% static 'myapp/img/produto_default.png' %}" class="card-img-top" alt="Produto sem imagem">
+            {% endif %}
+
+            <div class="card-body d-flex flex-column">
+              {% comment %} Exibe o nome e a descrição do produto do banco de dados {% endcomment %}
+              <h5 class="card-title">{{ produto.nome }}</h5>
+              <p class="card-text">{{ produto.descricao|truncatewords:15 }}</p>
+
+              {% comment %} As classes mt-auto, d-flex, etc., ajudam a alinhar o preço e o botão no final do card {% endcomment %}
+              <div class="mt-auto d-flex justify-content-between align-items-center">
+
+                {% comment %} Exibe o preço do produto e o formata {% endcomment %}
+                <strong class="text-primary fs-5">R$ {{ produto.preco }}</strong>
+
+                {% comment %} Link que leva para a URL 'adicionar_ao_carrinho', passando o ID do produto {% endcomment %}
+                <a href="{% url 'adicionar_ao_carrinho' produto.id %}" class="btn btn-sm btn-primary">Adicionar ao Carrinho</a>
               </div>
             </div>
           </div>
         </div>
+        {% empty %}
+          {% comment %} Este bloco será exibido se a lista 'produtos' estiver vazia {% endcomment %}
+          <div class="col-12">
+            <p class="text-center">Nenhum produto em destaque no momento. Adicione produtos no painel de administração.</p>
+          </div>
+        {% endfor %}
+
       </div>
     </div>
   </section>
 
-  <!-- Benefícios -->
   <section class="py-5 text-center">
     <div class="container">
       <h2 class="mb-4">Por que escolher nossos produtos?</h2>
@@ -52,7 +77,6 @@
     </div>
   </section>
 
-  <!-- Newsletter -->
   <section class="bg-primary text-white py-5 text-center">
     <div class="container">
       <h3>Fique por dentro das novidades</h3>
