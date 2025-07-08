@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -41,10 +40,19 @@ INSTALLED_APPS = [
     'myapp'
 ]
 
-# Configurações de autenticação
-LOGIN_URL = 'login'
+# --- Bloco de Autenticação Centralizado ---
+# URL para onde o usuário é redirecionado se tentar acessar uma página protegida sem estar logado.
+LOGIN_URL = '/painel/login/'
+
+# URL para onde o usuário é redirecionado após um login bem-sucedido.
+# Certifique-se de que você tem uma URL com o name='admin_dashboard' em seu urls.py
 LOGIN_REDIRECT_URL = 'admin_dashboard'
+
+# URL para onde o usuário é redirecionado após o logout.
+# Certifique-se de que você tem uma URL com o name='home' em seu urls.py
 LOGOUT_REDIRECT_URL = 'home'
+# --- Fim do Bloco ---
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -127,10 +135,12 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
+# Media files (Uploads)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

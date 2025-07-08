@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Meu Carrinho{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12 text-center">
+            <h2>🛒 Meu Carrinho de Compras</h2>
+            <hr>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Seus Itens</h5>
+
+                    <p>Seu carrinho está vazio no momento.</p>
+                    <p>Volte para a <a href="{% url 'home' %}">página inicial</a> para adicionar produtos!</p>
+
+                    </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Resumo do Pedido</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Subtotal</span>
+                            <strong>R$ 0,00</strong>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Frete</span>
+                            <strong>R$ 0,00</strong>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Total</span>
+                            <strong>R$ 0,00</strong>
+                        </li>
+                    </ul>
+                    <div class="d-grid gap-2 mt-3">
+                        <a href="#" class="btn btn-primary">Finalizar Compra</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
