@@ -1,39 +1,26 @@
 {% extends 'base.html' %}
-{% load static %}
 
-{% block title %}Login{% endblock %}
+{% block title %}Login do Administrador{% endblock %}
 
 {% block content %}
-<div class="container mt-5 mb-5">
+<div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <div class="card">
-                <div class="card-header text-center">
-                    <h3>Faça seu Login</h3>
-                </div>
-                <div class="card-body">
-                    <form method="post">
-                        {% csrf_token %}
+            <h2>Login do Painel de Administração</h2>
 
-                        {{ form.as_p }}
+            <form method="post">
+                {% csrf_token %}
 
-                        {% if messages %}
-                            {% for message in messages %}
-                                <div class="alert alert-danger" role="alert">
-                                    {{ message }}
-                                </div>
-                            {% endfor %}
-                        {% endif %}
+                {{ form.as_p }}
 
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary">Entrar</button>
-                        </div>
-                    </form>
-                </div>
-                <div class="card-footer text-center">
-                    <small>Não tem uma conta? <a href="{% url 'registro_usuario' %}">Registre-se aqui!</a></small>
-                </div>
-            </div>
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-danger">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+
+                <button type="submit" class="btn btn-primary">Entrar</button>
+            </form>
         </div>
     </div>
 </div>

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Pedido Realizado!{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5 text-center">
+    <div class="py-5">
+        <img src="{% static 'myapp/img/check.png' %}" alt="Sucesso" style="max-width: 100px;">
+        <h2 class="mt-3">Pedido Realizado com Sucesso!</h2>
+        <p class="lead">Obrigado por comprar conosco. Seu carrinho agora está vazio.</p>
+        <p>Você receberá um e-mail com os detalhes do seu pedido em breve.</p>
+        <a href="{% url 'home' %}" class="btn btn-primary mt-3">Voltar para a Página Inicial</a>
+    </div>
+</div>
+{% endblock %}

@@ -80,21 +80,53 @@ def logout_usuario(request):
 @login_required
 def carrinho(request):
     """
-    Exibe a página do carrinho de compras.
+    Exibe os itens do carrinho de compras que estão na sessão.
     """
-    return render(request, 'carrinho.html')
+    carrinho_session = request.session.get('carrinho', {})
+
+    # Adiciona o subtotal para cada item e calcula o total geral
+    total_carrinho = 0
+    for item in carrinho_session.values():
+        item['subtotal'] = float(item['preco']) * item['quantidade']
+        total_carrinho += item['subtotal']
+
+    context = {
+        'carrinho': carrinho_session,
+        'total_carrinho': total_carrinho
+    }
+    return render(request, 'carrinho.html', context)
 
 
 @login_required
 def adicionar_ao_carrinho(request, produto_id):
     """
-    (Lógica futura) Adiciona um produto ao carrinho do usuário.
+    Adiciona um produto ao carrinho de compras armazenado na sessão.
     """
     produto = get_object_or_404(Produto, id=produto_id)
-    # Aqui virá a lógica para adicionar ao carrinho (usando sessões ou um modelo)
+    # Pega o carrinho da sessão atual, ou cria um dicionário vazio se não existir
+    carrinho_session = request.session.get('carrinho', {})
+
+    # Converte o ID do produto para string, pois as chaves da sessão devem ser strings
+    produto_id_str = str(produto_id)
+
+    # Verifica se o produto já está no carrinho
+    if produto_id_str in carrinho_session:
+        # Se estiver, incrementa a quantidade
+        carrinho_session[produto_id_str]['quantidade'] += 1
+    else:
+        # Se não estiver, adiciona o produto com quantidade 1
+        carrinho_session[produto_id_str] = {
+            'quantidade': 1,
+            'preco': str(produto.preco),  # Armazena o preço como string
+            'nome': produto.nome,
+            'imagem_url': produto.imagem.url if produto.imagem else ''
+        }
+
+    # Salva o carrinho de volta na sessão
+    request.session['carrinho'] = carrinho_session
+
     messages.success(request, f'"{produto.nome}" foi adicionado ao seu carrinho!')
     return redirect('carrinho')
-
 
 # ===================================================================
 # == VIEWS PARA O PAINEL DE ADMINISTRAÇÃO (Fluxo Interno)
@@ -172,3 +204,43 @@ def usuario_deletar(request, pk):
     usuario.delete()
     messages.success(request, 'Usuário excluído com sucesso!')
     return redirect('admin_dashboard')
+
+# myapp/views.py
+
+@login_required
+def checkout(request):
+    """
+    Mostra a página de revisão do pedido antes do pagamento.
+    """
+    carrinho_session = request.session.get('carrinho', {})
+    if not carrinho_session:
+        # Se o carrinho estiver vazio, não há o que finalizar. Redireciona para a home.
+        messages.info(request, "Seu carrinho está vazio.")
+        return redirect('home')
+
+    total_carrinho = 0
+    for item in carrinho_session.values():
+        item['subtotal'] = float(item['preco']) * item['quantidade']
+        total_carrinho += item['subtotal']
+
+    context = {
+        'carrinho': carrinho_session,
+        'total_carrinho': total_carrinho
+    }
+    return render(request, 'checkout.html', context)
+
+
+@login_required
+def processar_pagamento(request):
+    """
+    Processa o pedido, limpa o carrinho e mostra a página de sucesso.
+    No futuro, aqui você integraria com um sistema de pagamento real.
+    """
+    # Lógica para salvar o pedido no banco de dados viria aqui.
+
+    # Limpa o carrinho da sessão
+    if 'carrinho' in request.session:
+        del request.session['carrinho']
+
+    # Renderiza a página de sucesso
+    return render(request, 'pagamento_sucesso.html')
