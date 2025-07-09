@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Pague com PIX{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5 text-center">
+    <h2>Quase lá! Pague com PIX para confirmar seu pedido #{{ pedido.id }}</h2>
+    <p class="lead">Escaneie o QR Code abaixo com o app do seu banco.</p>
+
+    <div class="my-4">
+        <img src="data:image/jpeg;base64,{{ pix_qr_code_base64 }}" alt="PIX QR Code">
+    </div>
+
+    <h4>Ou copie o código PIX:</h4>
+    <div class="input-group mb-3" style="max-width: 600px; margin: auto;">
+        <input type="text" class="form-control" value="{{ pix_qr_code_text }}" id="pixCode" readonly>
+        <button class="btn btn-outline-secondary" type="button" onclick="copiarPix()">Copiar</button>
+    </div>
+
+    <p class="mt-4"><strong>Status do Pedido:</strong> <span class="badge bg-warning text-dark">{{ pedido.get_status_display }}</span></p>
+    <p>Estamos aguardando a confirmação do pagamento. Assim que for confirmado, você receberá um novo e-mail.</p>
+    <a href="{% url 'home' %}" class="btn btn-secondary">Voltar para a loja</a>
+</div>
+
+<script>
+function copiarPix() {
+  var copyText = document.getElementById("pixCode");
+  copyText.select();
+  copyText.setSelectionRange(0, 99999);
+  document.execCommand("copy");
+  alert("Código PIX copiado!");
+}
+</script>
+{% endblock %}

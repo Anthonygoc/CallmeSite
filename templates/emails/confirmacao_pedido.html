@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Confirmação do seu Pedido</title>
+</head>
+<body style="font-family: sans-serif; color: #333;">
+    <h2 style="color: #0d6efd;">Olá, {{ pedido.usuario.username }}!</h2>
+    <p>Obrigado por comprar na <strong>CallMe</strong>.</p>
+    <p>Recebemos o seu pedido <strong>#{{ pedido.id }}</strong> e ele já está em revisão.</p>
+    <hr>
+    <h3>Resumo do Pedido</h3>
+    <ul style="list-style-type: none; padding: 0;">
+        {% for item in pedido.itens.all %}
+            <li style="margin-bottom: 10px;">
+                {{ item.quantidade }}x {{ item.produto.nome }} - <strong>R$ {{ item.subtotal|floatformat:2 }}</strong>
+            </li>
+        {% endfor %}
+    </ul>
+    <h3>Valor Total: R$ {{ pedido.valor_total|floatformat:2 }}</h3>
+    <hr>
+    <p>Avisaremos assim que seu pedido for aprovado e enviado.</p>
+    <p>Atenciosamente,<br>Equipe CallMe</p>
+</body>
+</html>

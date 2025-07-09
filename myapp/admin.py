@@ -1,24 +1,30 @@
 from django.contrib import admin
-from .models import Usuario, Produto, Pedido, ItemPedido
-
-@admin.register(Usuario)
-class UsuarioAdmin(admin.ModelAdmin):
-    list_display = ('nome', 'email', 'cpf', 'idade', 'cidade', 'pais', 'data_cadastro')
-    search_fields = ('nome', 'email', 'cpf')
-    list_filter = ('cidade', 'pais', 'data_cadastro')
-
-@admin.register(Produto)
-class ProdutoAdmin(admin.ModelAdmin):
-    list_display = ('nome', 'preco', 'disponivel', 'estoque')
-    list_filter = ('disponivel', 'data_criacao')
-    search_fields = ('nome',)
+from .models import Usuario, Administrador, Produto, Pedido, ItemPedido
 
 class ItemPedidoInline(admin.TabularInline):
     model = ItemPedido
-    raw_id_fields = ['produto']
+    readonly_fields = ('produto', 'quantidade', 'preco_unitario', 'subtotal')
+    extra = 0
 
 @admin.register(Pedido)
 class PedidoAdmin(admin.ModelAdmin):
-    list_display = ('id', 'usuario', 'estado', 'data_pedido')
-    list_filter = ('estado', 'data_pedido')
+    list_display = ('id', 'usuario', 'data_pedido', 'valor_total', 'status')
+    list_filter = ('status', 'data_pedido')
+    search_fields = ('usuario__username', 'id')
     inlines = [ItemPedidoInline]
+
+@admin.register(Produto)
+class ProdutoAdmin(admin.ModelAdmin):
+    list_display = ('nome', 'preco', 'estoque', 'disponivel')
+    list_filter = ('disponivel', 'data_criacao')
+    search_fields = ('nome', 'descricao')
+
+@admin.register(Usuario)
+class UsuarioAdmin(admin.ModelAdmin):
+    list_display = ('nome', 'email', 'cpf', 'data_cadastro')
+    search_fields = ('nome', 'email', 'cpf')
+
+@admin.register(Administrador)
+class AdministradorAdmin(admin.ModelAdmin):
+    list_display = ('user', 'nome_completo')
+    search_fields = ('nome_completo',)

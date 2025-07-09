@@ -1,0 +1,19 @@
+Olá, {{ pedido.usuario.username }}!
+
+Obrigado por comprar na CallMe.
+Recebemos o seu pedido nº {{ pedido.id }} e ele já está em revisão.
+
+================================
+RESUMO DO PEDIDO
+================================
+{% for item in pedido.itens.all %}
+- {{ item.quantidade }}x {{ item.produto.nome }} (R$ {{ item.subtotal|floatformat:2 }})
+{% endfor %}
+
+VALOR TOTAL: R$ {{ pedido.valor_total|floatformat:2 }}
+================================
+
+Avisaremos assim que seu pedido for aprovado e enviado.
+
+Atenciosamente,
+Equipe CallMe
