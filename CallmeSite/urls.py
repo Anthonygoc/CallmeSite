@@ -14,6 +14,7 @@ urlpatterns = [
     path('carrinho/adicionar/<int:produto_id>/', views.adicionar_ao_carrinho, name='adicionar_ao_carrinho'),
     path('checkout/', views.checkout, name='checkout'),
     path('pagamento/processar/', views.processar_pagamento, name='processar_pagamento'),
+    path('webhook/mercado-pago/', views.webhook_mercado_pago, name='webhook_mercado_pago'),
 
     # --- Administration Panel Routes ---
     path('painel/admin/', admin.site.urls),

@@ -1,14 +1,18 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.db import transaction
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.conf import settings # Importe 'settings'
 import mercadopago
+from django.http import JsonResponse, HttpResponse # Importe JsonResponse e HttpResponse
+import json
 
 from .forms import (
     ClienteRegistroForm, ClienteLoginForm, UsuarioForm,
@@ -229,3 +233,40 @@ def usuario_deletar(request, pk):
     usuario.delete()
     messages.success(request, 'User deleted successfully!')
     return redirect('admin_dashboard')
+
+
+@csrf_exempt  # Essencial para permitir que o Mercado Pago envie dados
+def webhook_mercado_pago(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        if data.get("type") == "payment":
+            payment_id = data["data"]["id"]
+
+            # Consulta o status do pagamento na API do Mercado Pago
+            sdk = mercadopago.SDK(settings.MERCADO_PAGO_ACCESS_TOKEN)
+            payment_info = sdk.payment().get(payment_id)
+            payment = payment_info.get("response")
+
+            if payment:
+                status = payment.get("status")
+                # Encontra o nosso pedido no banco de dados
+                try:
+                    pedido = Pedido.objects.get(pagamento_id=str(payment_id))
+
+                    # Se o pagamento foi aprovado e o pedido ainda está em revisão
+                    if status == "approved" and pedido.status == "em_revisao":
+                        pedido.status = "pago"
+                        pedido.save()
+
+                        # Envia o e-mail de confirmação de pagamento
+                        assunto = f"Pagamento Aprovado para o Pedido #{pedido.id}"
+                        # Crie novos templates para este e-mail
+                        # corpo_html = render_to_string('emails/pagamento_confirmado.html', {'pedido': pedido})
+                        # send_mail(assunto, ..., html_message=corpo_html)
+
+                        print(f"Pedido #{pedido.id} atualizado para PAGO.")
+
+                except Pedido.DoesNotExist:
+                    pass  # Pedido não encontrado, ignora
+
+    return HttpResponse(status=200)  # Responde ao Mercado Pago que recebemos a notificação
