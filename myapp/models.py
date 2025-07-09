@@ -38,10 +38,11 @@ class Produto(models.Model):
     def __str__(self):
         return self.nome
 
+
 class Pedido(models.Model):
     STATUS_CHOICES = (
         ('em_revisao', 'Em Revisão'),
-        ('pago', 'Pago'), # Adicionamos o status 'Pago'
+        ('pago', 'Pago'),
         ('enviado', 'Enviado'),
         ('cancelado', 'Cancelado'),
     )
@@ -49,8 +50,9 @@ class Pedido(models.Model):
     data_pedido = models.DateTimeField(auto_now_add=True)
     valor_total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='em_revisao')
-    # --- NOVO CAMPO ADICIONADO ABAIXO ---
     pagamento_id = models.CharField(max_length=100, null=True, blank=True)
+    data_pagamento = models.DateTimeField(null=True, blank=True)
+    metodo_pagamento = models.CharField(max_length=50, null=True, blank=True)
 
     def __str__(self):
         return f"Pedido #{self.id} - {self.usuario.username}"

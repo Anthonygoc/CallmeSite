@@ -1,52 +1,53 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Finalizar Compra{% endblock %}
+{% block title %}Finalizar Pedido{% endblock %}
 
 {% block content %}
-<div class="container mt-5 mb-5">
-    <div class="row">
-        <div class="col-12 text-center">
-            <h2>Revisão do Pedido</h2>
-            <p class="lead">Confirme os itens antes de prosseguir para o pagamento.</p>
-            <hr>
-        </div>
-    </div>
+<div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8">
+        <div class="card-modern">
 
-    <div class="row">
-        <div class="col-md-8">
-            <h4>Seus Itens</h4>
-            <ul class="list-group mb-3">
-                {% for produto_id, item in carrinho.items %}
-                <li class="list-group-item d-flex justify-content-between lh-sm">
-                    <div>
-                        <h6 class="my-0">{{ item.nome }}</h6>
-                        <small class="text-muted">Quantidade: {{ item.quantidade }}</small>
+            <h2 class="text-center mb-2 fw-bold">Finalize o seu Pedido</h2>
+            <p class="text-secondary text-center mb-5">Reveja os itens do seu pedido antes de gerar o PIX para pagamento.</p>
+
+            <!-- Secção de Resumo do Pedido -->
+            <div class="mb-5">
+                <h3 class="h5 fw-bold text-white mb-4">Resumo do Pedido</h3>
+                <div class="d-flex flex-column gap-3">
+
+                    <!-- Loop do Django para mostrar os itens reais do carrinho -->
+                    {% for produto_id, item in carrinho.items %}
+                    <div class="d-flex justify-content-between text-secondary">
+                        <span>{{ item.quantidade }}x {{ item.nome }}</span>
+                        <span>R$ {{ item.subtotal|floatformat:2 }}</span>
                     </div>
-                    <span class="text-muted">R$ {{ item.subtotal|floatformat:2 }}</span>
-                </li>
-                {% endfor %}
-                <li class="list-group-item d-flex justify-content-between bg-light">
-                    <div class="text-success">
-                        <h6 class="my-0">Total (BRL)</h6>
-                    </div>
-                    <span class="text-success"><strong>R$ {{ total_carrinho|floatformat:2 }}</strong></span>
-                </li>
-            </ul>
-        </div>
-        <div class="col-md-4">
-            <h4>Pagamento</h4>
-            <div class="card">
-                <div class="card-body">
-                    <p>Ao clicar no botão abaixo, seu pedido será confirmado e você será levado para a página de confirmação.</p>
-                    <form action="{% url 'processar_pagamento' %}" method="post">
-                        {% csrf_token %}
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary btn-lg">Confirmar e Pagar</button>
-                        </div>
-                    </form>
+                    {% endfor %}
+
+                </div>
+                <hr style="border-color: var(--border-color);" class="my-4">
+                <div class="d-flex justify-content-between text-white fw-bold h5">
+                    <span>Total</span>
+                    <span>R$ {{ total_carrinho|floatformat:2 }}</span>
                 </div>
             </div>
+
+            <!-- Botão de Ação -->
+            <form action="{% url 'processar_pagamento' %}" method="post" class="d-grid">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-purple">
+                    Confirmar e Gerar PIX
+                </button>
+            </form>
+
+            <!-- Mensagem de Segurança -->
+            <div class="d-flex align-items-center justify-content-center mt-4 text-secondary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock-fill me-2" viewBox="0 0 16 16">
+                    <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2"/>
+                </svg>
+                <span class="small">O seu pedido será processado e ficará em revisão.</span>
+            </div>
+
         </div>
     </div>
 </div>

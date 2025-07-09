@@ -2,12 +2,13 @@
 {% load static %}
 
 {% block content %}
+  <!-- Seção Hero (Mantida) -->
   <section class="container my-5">
     <div class="row align-items-center">
       <div class="col-md-6">
         <h1>Ferramentas Profissionais para Desenvolvedores</h1>
-        <p class="lead">Aumente sua produtividade com nossas soluções inovadoras e eficientes</p>
-        <a href="#produtos" class="btn btn-primary">Explorar Produtos</a>
+        <p class="lead text-secondary">Aumente sua produtividade com nossas soluções inovadoras e eficientes</p>
+        <a href="#planos" class="btn btn-purple">Explorar Planos</a>
       </div>
       <div class="col-md-6">
         <img src="{% static 'myapp/img/hero.jpg' %}" alt="Hero" class="img-fluid rounded shadow-sm">
@@ -15,60 +16,62 @@
     </div>
   </section>
 
-  <section id="produtos" class="bg-light py-5">
-    <div class="container">
-      <h2 class="text-center mb-5">Produtos em Destaque</h2>
-      <div class="row g-4">
+  <!-- ======================================================= -->
+  <!-- == SEÇÃO DE PRODUTOS SUBSTITUÍDA PELO DESIGN DE PLANOS == -->
+  <!-- ======================================================= -->
+  <section id="planos" class="py-5">
+    <div class="container text-center">
 
-        {% comment %}
-          Início do loop dinâmico.
-          Isso irá repetir o bloco de código para cada 'produto' na lista 'produtos'
-          que a view 'home' envia para o template.
-        {% endcomment %}
+      <!-- Título da Seção -->
+      <div class="mb-5">
+          <h1 class="display-4 fw-bold">Escolha o seu Plano</h1>
+          <p class="lead text-secondary">Temos a solução perfeita para impulsionar a sua produtividade.</p>
+      </div>
 
-        {% for produto in produtos %}
-        <div class="col-md-4">
-          <div class="card h-100 shadow-sm">
+      <!-- Grid dos Planos -->
+      <div class="row g-5 justify-content-center">
 
-            {% comment %} Exibe a imagem do produto ou uma imagem padrão {% endcomment %}
-            {% if produto.imagem %}
-              <img src="{{ produto.imagem.url }}" class="card-img-top" alt="{{ produto.nome }}">
-            {% else %}
-              <img src="{% static 'myapp/img/produto_default.png' %}" class="card-img-top" alt="Produto sem imagem">
-            {% endif %}
+          <!-- Loop do Django para criar os cards de planos -->
+          {% for produto in produtos %}
+          <div class="col-lg-4 col-md-6">
+              <div class="pricing-card">
 
-            <div class="card-body d-flex flex-column">
-              {% comment %} Exibe o nome e a descrição do produto do banco de dados {% endcomment %}
-              <h5 class="card-title">{{ produto.nome }}</h5>
-              <p class="card-text">{{ produto.descricao|truncatewords:15 }}</p>
+                  <!-- Imagem do Plano/Produto -->
+                  {% if produto.imagem %}
+                    <img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}" class="img-fluid rounded-circle mx-auto mb-4" style="width: 120px; height: 120px; object-fit: cover; border: 3px solid var(--primary-purple);">
+                  {% endif %}
 
-              {% comment %} As classes mt-auto, d-flex, etc., ajudam a alinhar o preço e o botão no final do card {% endcomment %}
-              <div class="mt-auto d-flex justify-content-between align-items-center">
+                  <h3 class="plan-name">{{ produto.nome }}</h3>
 
-                {% comment %} Exibe o preço do produto e o formata {% endcomment %}
-                <strong class="text-primary fs-5">R$ {{ produto.preco }}</strong>
+                  <div class="plan-price">R${{ produto.preco|floatformat:0 }}</div>
 
-                {% comment %} Link que leva para a URL 'adicionar_ao_carrinho', passando o ID do produto {% endcomment %}
-                <a href="{% url 'adicionar_ao_carrinho' produto.id %}" class="btn btn-sm btn-primary">Adicionar ao Carrinho</a>
+                  <ul class="plan-features">
+                      <!-- O filtro 'linebreaksbr' transforma quebras de linha em <br> -->
+                      {{ produto.descricao|linebreaksbr }}
+                  </ul>
+
+                  <a href="{% url 'adicionar_ao_carrinho' produto.id %}" class="btn btn-choose-plan">
+                      Escolher Plano
+                  </a>
+
               </div>
+          </div>
+          {% empty %}
+            <div class="col-12">
+              <p class="text-center text-secondary">Nenhum plano disponível no momento.</p>
             </div>
-          </div>
-        </div>
-        {% empty %}
-          {% comment %} Este bloco será exibido se a lista 'produtos' estiver vazia {% endcomment %}
-          <div class="col-12">
-            <p class="text-center">Nenhum produto em destaque no momento. Adicione produtos no painel de administração.</p>
-          </div>
-        {% endfor %}
+          {% endfor %}
 
       </div>
+
     </div>
   </section>
 
+  <!-- Seção "Por que escolher" (Mantida) -->
   <section class="py-5 text-center">
     <div class="container">
       <h2 class="mb-4">Por que escolher nossos produtos?</h2>
-      <div class="row">
+      <div class="row text-secondary">
         <div class="col-md-3"><p>🚀 <br> Alta Performance</p></div>
         <div class="col-md-3"><p>🔒 <br> Segurança</p></div>
         <div class="col-md-3"><p>⚙️ <br> Produtividade</p></div>
@@ -77,16 +80,19 @@
     </div>
   </section>
 
-  <section class="bg-primary text-white py-5 text-center">
+  <!-- Seção Newsletter (Mantida e estilizada) -->
+  <section class="py-5">
     <div class="container">
-      <h3>Fique por dentro das novidades</h3>
-      <p class="mb-4">Receba atualizações sobre novos produtos e ofertas especiais</p>
-      <div class="row justify-content-center">
-        <div class="col-md-4">
-          <input type="email" class="form-control" placeholder="Seu e-mail">
-        </div>
-        <div class="col-auto">
-          <a href="{% url 'registro_usuario' %}" class="btn btn-dark">Inscrever-se</a>
+      <div class="card-modern text-center p-5">
+        <h3>Fique por dentro das novidades</h3>
+        <p class="mb-4 text-secondary">Receba atualizações sobre novos produtos e ofertas especiais</p>
+        <div class="row justify-content-center">
+          <div class="col-md-5">
+            <form class="d-flex gap-2">
+              <input type="email" class="form-control" placeholder="Seu e-mail">
+              <button type="submit" class="btn btn-purple">Inscrever</button>
+            </form>
+          </div>
         </div>
       </div>
     </div>

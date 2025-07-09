@@ -1,0 +1,161 @@
+/* --- VARIAVEIS GLOBAIS DE COR --- */
+:root {
+    --dark-bg: #1a1a1a;
+    --card-bg: #2b2b2b;
+    --primary-purple: #8A2BE2;
+    --primary-purple-hover: #7b24ca;
+    --text-primary: #ffffff;
+    --text-secondary: #b3b3b3;
+    --border-color: #444444;
+}
+
+/* --- ESTILOS GERAIS DO CORPO --- */
+body {
+    background-color: var(--dark-bg);
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+}
+
+/* --- BARRA DE NAVEGAÇÃO --- */
+.navbar-dark-modern {
+    background-color: transparent !important;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+.navbar-dark-modern .navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+.navbar-dark-modern .nav-link {
+    color: var(--text-secondary);
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+.navbar-dark-modern .nav-link:hover,
+.navbar-dark-modern .nav-link.active {
+    color: var(--text-primary);
+}
+
+/* --- BOTÕES COM DEGRADÊ FUTURISTA --- */
+.btn-purple {
+    background-image: linear-gradient(45deg, #6a11cb 0%, #8A2BE2 100%);
+    border: none;
+    color: var(--text-primary);
+    border-radius: 8px;
+    padding: 12px 30px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+.btn-purple:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(138, 43, 226, 0.4);
+    color: var(--text-primary);
+}
+
+/* --- CARDS E CONTAINERS MODERNOS --- */
+.card-modern {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 2.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* --- ESTILOS DE FORMULÁRIO --- */
+.card-modern form input[type="text"],
+.card-modern form input[type="email"],
+.card-modern form input[type="password"] {
+    display: block;
+    width: 100%;
+    background-color: #333333;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--text-primary);
+    padding: 12px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.card-modern form input:focus {
+    outline: none;
+    border-color: var(--primary-purple);
+    box-shadow: 0 0 15px rgba(138, 43, 226, 0.3);
+}
+
+/* --- FOOTER --- */
+footer.footer-modern {
+    border-top: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    background-color: var(--dark-bg);
+}
+
+/* ======================================================= */
+/* == NOVOS ESTILOS PARA OS CARDS DE PLANOS (PRICING) == */
+/* ======================================================= */
+
+.pricing-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 20px; /* Cantos mais arredondados */
+    padding: 2.5rem; /* Mais espaçamento interno */
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Efeito de movimento ao passar o mouse */
+.pricing-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+}
+
+.pricing-card .plan-name {
+    font-size: 1.5rem; /* Nome do plano maior */
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.pricing-card .plan-price {
+    font-size: 3.5rem; /* Preço maior */
+    font-weight: 700;
+    color: var(--primary-purple);
+    margin: 1rem 0;
+}
+
+.pricing-card .plan-features {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0;
+    color: var(--text-secondary);
+    flex-grow: 1; /* Faz esta seção crescer para alinhar os botões */
+    font-size: 1.1rem; /* Texto das features maior */
+}
+
+.pricing-card .plan-features li {
+    margin-bottom: 1rem;
+}
+
+/* Estilo padrão do botão (escondido) */
+.btn-choose-plan {
+    background-color: #3a3a3a;
+    border: 1px solid var(--text-secondary);
+    color: var(--text-secondary);
+    border-radius: 8px;
+    padding: 12px 25px;
+    font-weight: 700;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+/* Efeito do botão ao passar o mouse no CARD */
+.pricing-card:hover .btn-choose-plan {
+    background-image: linear-gradient(45deg, #6a11cb 0%, #8A2BE2 100%);
+    border-color: transparent;
+    color: white;
+    transform: scale(1.05); /* Botão fica maior */
+    box-shadow: 0 6px 20px rgba(138, 43, 226, 0.4);
+}

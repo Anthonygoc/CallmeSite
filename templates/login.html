@@ -1,25 +1,48 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Login do Administrador{% endblock %}
+{% block title %}Login{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <h2>Login de Usuario</h2>
+<div class="row justify-content-center">
+    <div class="col-lg-5 col-md-7">
+        <div class="card-modern">
+
+            <h2 class="text-center mb-4 fw-bold">Bem-vindo à CallMe</h2>
 
             <form method="post">
                 {% csrf_token %}
 
-                {{ form.as_p }}
-
-                {% if messages %}
-                    {% for message in messages %}
-                        <div class="alert alert-danger">{{ message }}</div>
-                    {% endfor %}
+                <!-- Exibe erros gerais do formulário, como "usuário ou senha inválidos" -->
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger p-2 text-center" role="alert">
+                        {% for error in form.non_field_errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
                 {% endif %}
 
-                <button type="submit" class="btn btn-primary">Entrar</button>
+                <!-- Campo de Nome de Usuário -->
+                <div class="mb-3">
+                    <label for="{{ form.username.id_for_label }}" class="form-label text-secondary">Usuário</label>
+                    <input type="text" name="{{ form.username.name }}" id="{{ form.username.id_for_label }}" class="form-control" placeholder="Digite seu nome de usuário">
+                </div>
+
+                <!-- Campo de Senha -->
+                <div class="mb-4">
+                    <label for="{{ form.password.id_for_label }}" class="form-label text-secondary">Senha</label>
+                    <input type="password" name="{{ form.password.name }}" id="{{ form.password.id_for_label }}" class="form-control" placeholder="Digite sua senha">
+                </div>
+
+                <div class="d-grid mb-3">
+                    <button type="submit" class="btn btn-purple">Login</button>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <a href="#" class="text-secondary small">Esqueceu a senha?</a>
+                    <a href="{% url 'registro_usuario' %}" class="text-secondary small">Criar conta</a>
+                </div>
+
             </form>
         </div>
     </div>
