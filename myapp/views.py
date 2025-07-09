@@ -308,3 +308,79 @@ def pagamento_sucesso(request):
     except Pedido.DoesNotExist:
         messages.error(request, "Pedido não encontrado.")
         return redirect('home')
+
+@login_required
+def meus_pedidos(request):
+        """
+        Busca e exibe todos os pedidos feitos pelo usuário logado.
+        """
+        pedidos = Pedido.objects.filter(usuario=request.user).order_by('-data_pedido')
+        context = {
+            'pedidos': pedidos
+        }
+        return render(request, 'meus_pedidos.html', context)
+
+
+@login_required
+def regerar_pagamento(request, pedido_id):
+    """
+    Pega um pedido existente que está 'em_revisao' e gera um novo
+    pagamento PIX para ele.
+    """
+    # Garante que o usuário só possa pagar pelo seu próprio pedido
+    pedido = get_object_or_404(Pedido, id=pedido_id, usuario=request.user)
+
+    # Se o pedido já foi pago ou cancelado, não permite gerar novo pagamento
+    if pedido.status != 'em_revisao':
+        messages.error(request, "Este pedido não está mais aguardando pagamento.")
+        return redirect('meus_pedidos')
+
+    try:
+        # Gera um novo pagamento PIX para o pedido existente
+        sdk = mercadopago.SDK(settings.MERCADO_PAGO_ACCESS_TOKEN)
+
+        payment_data = {
+            "transaction_amount": float(pedido.valor_total),
+            "description": f"Pagamento para o Pedido #{pedido.id} da loja CallMeSite",
+            "payment_method_id": "pix",
+            "payer": {"email": request.user.email}
+        }
+
+        payment_response = sdk.payment().create(payment_data)
+        payment = payment_response.get("response")
+
+        if not payment:
+            error_message = payment_response.get('message', 'Erro desconhecido na API do Mercado Pago.')
+            messages.error(request, f"Erro ao gerar pagamento: {error_message}")
+            return redirect('meus_pedidos')
+
+        # Atualiza o pedido com o NOVO ID de pagamento
+        pedido.pagamento_id = payment.get('id')
+        pedido.save()
+
+        # Reutiliza a mesma página de pagamento PIX
+        context = {
+            'pedido': pedido,
+            'pix_qr_code_base64': payment['point_of_interaction']['transaction_data']['qr_code_base64'],
+            'pix_qr_code_text': payment['point_of_interaction']['transaction_data']['qr_code']
+        }
+        return render(request, 'pagamento_pix.html', context)
+
+    except Exception as e:
+        messages.error(request, f"Ocorreu um erro ao tentar gerar o pagamento: {e}")
+        return redirect('meus_pedidos')
+
+
+@login_required
+def detalhes_pedido(request, pedido_id):
+    """
+    Busca e exibe os detalhes de um único pedido específico do usuário logado.
+    """
+    # get_object_or_404 garante que o usuário só possa ver seus próprios pedidos
+    # e que o pedido exista, evitando erros.
+    pedido = get_object_or_404(Pedido, id=pedido_id, usuario=request.user)
+
+    context = {
+        'pedido': pedido
+    }
+    return render(request, 'detalhes_pedido.html', context)

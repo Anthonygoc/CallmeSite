@@ -17,6 +17,9 @@ urlpatterns = [
     path('webhook/mercado-pago/', views.webhook_mercado_pago, name='webhook_mercado_pago'),
     path('pedido/status/<int:pedido_id>/', views.verificar_status_pedido, name='verificar_status_pedido'),
     path('pagamento/sucesso/', views.pagamento_sucesso, name='pagamento_sucesso'),
+    path('meus-pedidos/', views.meus_pedidos, name='meus_pedidos'),
+    path('pagamento/regerar/<int:pedido_id>/', views.regerar_pagamento, name='regerar_pagamento'),
+    path('meus-pedidos/<int:pedido_id>/', views.detalhes_pedido, name='detalhes_pedido'),
 
     # --- Administration Panel Routes ---
     path('painel/admin/', admin.site.urls),
