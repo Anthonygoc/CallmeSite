@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Seu Pagamento foi Aprovado!</title>
+</head>
+<body style="font-family: sans-serif; color: #333;">
+    <h2 style="color: #198754;">Pagamento Aprovado!</h2>
+    <p>Olá, {{ pedido.usuario.username }}.</p>
+    <p>Temos uma ótima notícia: o pagamento para o seu pedido <strong>#{{ pedido.id }}</strong> foi confirmado com sucesso.</p>
+    <hr>
+    <h3>Itens do Pedido:</h3>
+    <ul>
+        {% for item in pedido.itens.all %}
+            <li>{{ item.quantidade }}x {{ item.produto.nome }}</li>
+        {% endfor %}
+    </ul>
+    <hr>
+    <p>Já estamos preparando tudo para o envio. Você receberá um novo e-mail assim que seu pedido for despachado.</p>
+    <p>Atenciosamente,<br>Equipe CallMe</p>
+</body>
+</html>

@@ -18,18 +18,66 @@
         <button class="btn btn-outline-secondary" type="button" onclick="copiarPix()">Copiar</button>
     </div>
 
-    <p class="mt-4"><strong>Status do Pedido:</strong> <span class="badge bg-warning text-dark">{{ pedido.get_status_display }}</span></p>
-    <p>Estamos aguardando a confirmação do pagamento. Assim que for confirmado, você receberá um novo e-mail.</p>
-    <a href="{% url 'home' %}" class="btn btn-secondary">Voltar para a loja</a>
+    <div id="status-container" class="mt-4">
+        <p><strong>Status do Pedido:</strong> <span id="status-text" class="badge bg-warning text-dark">{{ pedido.get_status_display }}</span></p>
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Aguardando pagamento...</span>
+        </div>
+        <p id="aguardando-text">Aguardando confirmação do pagamento...</p>
+    </div>
+
+    <a href="{% url 'home' %}" class="btn btn-secondary mt-3">Voltar para a loja</a>
 </div>
 
 <script>
-function copiarPix() {
-  var copyText = document.getElementById("pixCode");
-  copyText.select();
-  copyText.setSelectionRange(0, 99999);
-  document.execCommand("copy");
-  alert("Código PIX copiado!");
-}
+    // Função para copiar o código PIX
+    function copiarPix() {
+      var copyText = document.getElementById("pixCode");
+      copyText.select();
+      copyText.setSelectionRange(0, 99999);
+      document.execCommand("copy");
+      alert("Código PIX copiado!");
+    }
+
+    // Função que verifica o status do pedido
+    async function checarStatus() {
+        // A URL da nossa nova API de status
+        const url = `/pedido/status/{{ pedido.id }}/`;
+
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
+
+            // Atualiza o texto do status na tela
+            document.getElementById('status-text').innerText = data.status_display;
+
+            if (data.status === 'pago') {
+                // Se o status for 'pago', para de verificar e redireciona
+                console.log('Pagamento confirmado! Redirecionando...');
+                clearInterval(intervalo); // Para o loop
+
+                // Muda a interface para mostrar o sucesso
+                document.getElementById('status-container').innerHTML = `
+                    <img src="{% static 'myapp/img/check.png' %}" alt="Sucesso" style="max-width: 80px;">
+                    <h4 class="text-success mt-2">Pagamento Confirmado!</h4>
+                    <p>Redirecionando em 3 segundos...</p>
+                `;
+
+                // Espera 3 segundos antes de redirecionar
+                setTimeout(() => {
+                    window.location.href = `/pagamento/sucesso/?pedido_id={{ pedido.id }}`;
+                }, 3000);
+
+            } else {
+                console.log(`Status atual: ${data.status}. Tentando novamente em 5 segundos...`);
+            }
+        } catch (error) {
+            console.error('Erro ao checar status:', error);
+        }
+    }
+
+    // Inicia o loop de verificação a cada 5 segundos (5000 milissegundos)
+    const intervalo = setInterval(checarStatus, 5000);
+
 </script>
 {% endblock %}

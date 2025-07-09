@@ -1,16 +1,16 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Pedido Realizado!{% endblock %}
+{% block title %}Pedido Confirmado!{% endblock %}
 
 {% block content %}
 <div class="container mt-5 mb-5 text-center">
     <div class="py-5">
         <img src="{% static 'myapp/img/check.png' %}" alt="Sucesso" style="max-width: 100px;">
-        <h2 class="mt-3">Pedido Realizado com Sucesso!</h2>
-        <p class="lead">Obrigado por comprar conosco. Seu carrinho agora está vazio.</p>
-        <p>Você receberá um e-mail com os detalhes do seu pedido em breve.</p>
-        <a href="{% url 'home' %}" class="btn btn-primary mt-3">Voltar para a Página Inicial</a>
+        <h2 class="mt-3">Pagamento Confirmado!</h2>
+        <p class="lead">Obrigado por comprar conosco. Seu pedido <strong>#{{ pedido.id }}</strong> foi aprovado.</p>
+        <p>Enviamos um e-mail com os detalhes da sua compra.</p>
+        <a href="{% url 'home' %}" class="btn btn-primary mt-3">Continuar Comprando</a>
     </div>
 </div>
 {% endblock %}

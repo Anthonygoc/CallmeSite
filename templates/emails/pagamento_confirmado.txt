@@ -1,0 +1,16 @@
+agamento Aprovado!
+=======================
+
+Olá, {{ pedido.usuario.username }}.
+
+Temos uma ótima notícia: o pagamento para o seu pedido nº {{ pedido.id }} foi confirmado com sucesso.
+
+Itens do Pedido:
+{% for item in pedido.itens.all %}
+- {{ item.quantidade }}x {{ item.produto.nome }}
+{% endfor %}
+
+Já estamos preparando tudo para o envio.
+
+Atenciosamente,
+Equipe CallMe

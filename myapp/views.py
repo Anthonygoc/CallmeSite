@@ -235,38 +235,76 @@ def usuario_deletar(request, pk):
     return redirect('admin_dashboard')
 
 
-@csrf_exempt  # Essencial para permitir que o Mercado Pago envie dados
+@csrf_exempt
 def webhook_mercado_pago(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         if data.get("type") == "payment":
             payment_id = data["data"]["id"]
 
-            # Consulta o status do pagamento na API do Mercado Pago
+            print(f"Webhook recebido para o pagamento: {payment_id}")  # DEBUG
+
             sdk = mercadopago.SDK(settings.MERCADO_PAGO_ACCESS_TOKEN)
             payment_info = sdk.payment().get(payment_id)
             payment = payment_info.get("response")
 
             if payment:
                 status = payment.get("status")
+                pedido_id_mp = payment.get("external_reference")  # Vamos usar a referência externa
+
                 # Encontra o nosso pedido no banco de dados
                 try:
+                    # Melhor usar a referência externa ou o ID do pagamento para encontrar o pedido
                     pedido = Pedido.objects.get(pagamento_id=str(payment_id))
 
-                    # Se o pagamento foi aprovado e o pedido ainda está em revisão
                     if status == "approved" and pedido.status == "em_revisao":
+                        print(f"Status do pagamento APROVADO. Atualizando pedido #{pedido.id}...")  # DEBUG
                         pedido.status = "pago"
                         pedido.save()
 
-                        # Envia o e-mail de confirmação de pagamento
-                        assunto = f"Pagamento Aprovado para o Pedido #{pedido.id}"
-                        # Crie novos templates para este e-mail
-                        # corpo_html = render_to_string('emails/pagamento_confirmado.html', {'pedido': pedido})
-                        # send_mail(assunto, ..., html_message=corpo_html)
+                        # --- LÓGICA DE ENVIO DE E-MAIL ---
+                        try:
+                            print(f"Tentando enviar e-mail de confirmação para {pedido.usuario.email}...")  # DEBUG
+                            assunto = f"Pagamento Aprovado para o Pedido #{pedido.id}"
+                            contexto_email = {'pedido': pedido}
+                            corpo_html = render_to_string('emails/pagamento_confirmado.html', contexto_email)
+                            corpo_texto = render_to_string('emails/pagamento_confirmado.txt', contexto_email)
 
-                        print(f"Pedido #{pedido.id} atualizado para PAGO.")
+                            send_mail(
+                                assunto,
+                                corpo_texto,
+                                settings.EMAIL_HOST_USER,
+                                [pedido.usuario.email],
+                                html_message=corpo_html
+                            )
+                            print("E-mail enviado com sucesso!")  # DEBUG
+                        except Exception as e:
+                            # Se o envio de e-mail falhar, imprime o erro no console mas não quebra o site
+                            print(f"!!! ERRO AO ENVIAR E-MAIL: {e}")  # DEBUG
 
                 except Pedido.DoesNotExist:
-                    pass  # Pedido não encontrado, ignora
+                    print(f"Pedido com pagamento_id {payment_id} não encontrado.")  # DEBUG
+                    pass
 
-    return HttpResponse(status=200)  # Responde ao Mercado Pago que recebemos a notificação
+    return HttpResponse(status=200)
+@login_required
+def verificar_status_pedido(request, pedido_id):
+    """
+    Uma view de API que retorna o status de um pedido em formato JSON.
+    """
+    try:
+        pedido = Pedido.objects.get(id=pedido_id, usuario=request.user)
+        return JsonResponse({'status': pedido.status, 'status_display': pedido.get_status_display()})
+    except Pedido.DoesNotExist:
+        return JsonResponse({'status': 'nao_encontrado'}, status=404)
+
+@login_required
+def pagamento_sucesso(request):
+    pedido_id = request.GET.get('pedido_id')
+    try:
+        pedido = Pedido.objects.get(id=pedido_id, usuario=request.user)
+        context = {'pedido': pedido}
+        return render(request, 'pagamento_sucesso.html', context)
+    except Pedido.DoesNotExist:
+        messages.error(request, "Pedido não encontrado.")
+        return redirect('home')
