@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Login{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'myapp/css/login.css' %}">
+</head>
+<body class="login-page">
+
+    <header class="login-header">
+        <div class="logo">BOA</div>
+        <nav class="login-nav">
+            <a href="#">Início</a>
+            <a href="#">Sobre</a>
+            <a href="#">Contato</a>
+        </nav>
+    </header>
+
+    <main class="login-main">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="login-footer">
+        <div class="logo">BOA</div>
+        <div class="footer-links">
+            <div class="footer-column">
+                <strong>Recursos</strong>
+                <a href="#">Ajuda</a>
+                <a href="#">Política</a>
+                <a href="#">Termos</a>
+            </div>
+            <div class="footer-column">
+                <strong>Empresa</strong>
+                <a href="#">Sobre</a>
+                <a href="#">Carreiras</a>
+                <a href="#">Suporte</a>
+            </div>
+            <div class="footer-column">
+                <strong>Contatos</strong>
+                <a href="#">Email</a>
+                <a href="#">WhatsApp</a>
+                <a href="#">Chat</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

@@ -8,33 +8,33 @@
     <div class="col-lg-5 col-md-7">
         <div class="card-modern">
 
-            <h2 class="text-center mb-4 fw-bold">Bem-vindo à CallMe</h2>
+            <h2 class="text-center mb-4 fw-bold">Bem-vindo de Volta</h2>
 
             <form method="post">
                 {% csrf_token %}
 
-                <!-- Exibe erros gerais do formulário, como "usuário ou senha inválidos" -->
+                <!-- Exibe erros gerais do formulário (ex: "usuário ou senha inválidos") -->
                 {% if form.non_field_errors %}
-                    <div class="alert alert-danger p-2 text-center" role="alert">
+                    <div class="alert alert-danger p-2 small text-center mb-3" role="alert">
                         {% for error in form.non_field_errors %}
                             {{ error }}
                         {% endfor %}
                     </div>
                 {% endif %}
 
-                <!-- Campo de Nome de Usuário -->
+                <!-- Loop para renderizar os campos do formulário (username e password) -->
+                <!-- Esta abordagem garante que os estilos definidos em forms.py sejam aplicados -->
+                {% for field in form %}
                 <div class="mb-3">
-                    <label for="{{ form.username.id_for_label }}" class="form-label text-secondary">Usuário</label>
-                    <input type="text" name="{{ form.username.name }}" id="{{ form.username.id_for_label }}" class="form-control" placeholder="Digite seu nome de usuário">
+                    <label for="{{ field.id_for_label }}" class="form-label text-secondary">{{ field.label }}</label>
+                    {{ field }} <!-- O Django renderiza o input com os estilos corretos aqui -->
+                    {% for error in field.errors %}
+                        <div class="text-danger small mt-1">{{ error }}</div>
+                    {% endfor %}
                 </div>
+                {% endfor %}
 
-                <!-- Campo de Senha -->
-                <div class="mb-4">
-                    <label for="{{ form.password.id_for_label }}" class="form-label text-secondary">Senha</label>
-                    <input type="password" name="{{ form.password.name }}" id="{{ form.password.id_for_label }}" class="form-control" placeholder="Digite sua senha">
-                </div>
-
-                <div class="d-grid mb-3">
+                <div class="d-grid my-4">
                     <button type="submit" class="btn btn-purple">Login</button>
                 </div>
 
