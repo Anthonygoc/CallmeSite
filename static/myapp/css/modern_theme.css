@@ -90,55 +90,44 @@ footer.footer-modern {
     background-color: var(--dark-bg);
 }
 
-/* ======================================================= */
-/* == NOVOS ESTILOS PARA OS CARDS DE PLANOS (PRICING) == */
-/* ======================================================= */
-
+/* --- ESTILOS PARA OS CARDS DE PLANOS (PRICING) --- */
 .pricing-card {
     background-color: var(--card-bg);
     border: 1px solid var(--border-color);
-    border-radius: 20px; /* Cantos mais arredondados */
-    padding: 2.5rem; /* Mais espaçamento interno */
+    border-radius: 20px;
+    padding: 2.5rem;
     text-align: center;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     height: 100%;
     display: flex;
     flex-direction: column;
 }
-
-/* Efeito de movimento ao passar o mouse */
 .pricing-card:hover {
     transform: translateY(-10px);
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
 }
-
 .pricing-card .plan-name {
-    font-size: 1.5rem; /* Nome do plano maior */
+    font-size: 1.5rem;
     font-weight: 700;
     color: var(--text-primary);
 }
-
 .pricing-card .plan-price {
-    font-size: 3.5rem; /* Preço maior */
+    font-size: 3.5rem;
     font-weight: 700;
     color: var(--primary-purple);
     margin: 1rem 0;
 }
-
 .pricing-card .plan-features {
     list-style: none;
     padding: 0;
     margin: 1.5rem 0;
     color: var(--text-secondary);
-    flex-grow: 1; /* Faz esta seção crescer para alinhar os botões */
-    font-size: 1.1rem; /* Texto das features maior */
+    flex-grow: 1;
+    font-size: 1.1rem;
 }
-
 .pricing-card .plan-features li {
     margin-bottom: 1rem;
 }
-
-/* Estilo padrão do botão (escondido) */
 .btn-choose-plan {
     background-color: #3a3a3a;
     border: 1px solid var(--text-secondary);
@@ -150,12 +139,45 @@ footer.footer-modern {
     transition: all 0.3s ease;
     width: 100%;
 }
-
-/* Efeito do botão ao passar o mouse no CARD */
 .pricing-card:hover .btn-choose-plan {
     background-image: linear-gradient(45deg, #6a11cb 0%, #8A2BE2 100%);
     border-color: transparent;
     color: white;
-    transform: scale(1.05); /* Botão fica maior */
+    transform: scale(1.05);
     box-shadow: 0 6px 20px rgba(138, 43, 226, 0.4);
+}
+
+/* ======================================================= */
+/* == NOVOS ESTILOS PARA A PÁGINA DO CARRINHO == */
+/* ======================================================= */
+.cart-table {
+    width: 100%;
+    color: var(--text-secondary);
+}
+.cart-table thead th {
+    color: var(--text-primary);
+    border-bottom: 2px solid var(--border-color);
+    font-weight: 700;
+    text-align: left;
+    padding: 1rem;
+}
+.cart-table tbody td {
+    vertical-align: middle;
+    border-bottom: 1px solid var(--border-color);
+    padding: 1.5rem 1rem;
+}
+.cart-table tbody tr:last-child td {
+    border-bottom: none;
+}
+.cart-product-name {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+.summary-card .list-group-item {
+    background-color: transparent;
+    border-color: var(--border-color);
+    color: var(--text-secondary);
+}
+.summary-card .list-group-item strong {
+    color: var(--text-primary);
 }

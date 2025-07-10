@@ -4,66 +4,82 @@
 {% block title %}Meu Carrinho{% endblock %}
 
 {% block content %}
-<div class="container mt-5 mb-5">
-    <div class="row">
-        <div class="col-12 text-center">
-            <h2>🛒 Meu Carrinho de Compras</h2>
-            <hr>
-        </div>
+<div class="container">
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold">Seu Carrinho</h1>
+        <p class="lead text-secondary">Confira os seus planos e finalize a compra.</p>
     </div>
 
-    <div class="row">
+    <div class="row g-5">
         {% if carrinho %}
-        <div class="col-lg-9">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col">Produto</th>
-                        <th scope="col">Preço</th>
-                        <th scope="col">Quantidade</th>
-                        <th scope="col">Subtotal</th>
-                        <th scope="col">Ação</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for produto_id, item in carrinho.items %}
-                    <tr>
-                        <td>
-                            <img src="{{ item.imagem_url }}" alt="{{ item.nome }}" class="img-fluid" style="max-width: 50px; margin-right: 10px;">
-                            {{ item.nome }}
-                        </td>
-                        <td>R$ {{ item.preco }}</td>
-                        <td>{{ item.quantidade }}</td>
-                        <td>R$ {{ item.subtotal|floatformat:2 }}</td>
-                        <td>
-                            <a href="#" class="btn btn-danger btn-sm">Remover</a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+        <!-- Se o carrinho NÃO estiver vazio -->
+        <div class="col-lg-8">
+            <div class="card-modern">
+                <table class="cart-table">
+                    <thead>
+                        <tr>
+                            <th colspan="2">Plano</th>
+                            <th>Preço</th>
+                            <th>Quantidade</th>
+                            <th>Subtotal</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for produto_id, item in carrinho.items %}
+                        <tr>
+                            <td style="width: 80px;">
+                                {% if item.imagem_url %}
+                                    <img src="{{ item.imagem_url }}" alt="{{ item.nome }}" class="img-fluid rounded-circle" style="width: 60px; height: 60px; object-fit: cover;">
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="cart-product-name">{{ item.nome }}</span>
+                            </td>
+                            <td>R$ {{ item.preco }}</td>
+                            <td>{{ item.quantidade }}</td>
+                            <td>R$ {{ item.subtotal|floatformat:2 }}</td>
+                            <td>
+                                <!-- Adicione um link para remover o item no futuro -->
+                                <a href="#" class="btn btn-outline-danger btn-sm">Remover</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
 
-        <div class="col-lg-3">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Resumo do Pedido</h5>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item d-flex justify-content-between">
-                            <span>Total</span>
-                            <strong>R$ {{ total_carrinho|floatformat:2 }}</strong>
-                        </li>
-                    </ul>
-                  <div class="d-grid gap-2 mt-3">
-                        <a href="{% url 'checkout' %}" class="btn btn-primary">Finalizar Compra</a>
-                    </div>
+        <div class="col-lg-4">
+            <div class="card-modern summary-card">
+                <h3 class="h5 fw-bold mb-4">Resumo do Pedido</h3>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between px-0">
+                        <span>Subtotal</span>
+                        <span>R$ {{ total_carrinho|floatformat:2 }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between px-0">
+                        <span>Taxas</span>
+                        <span>R$ 0,00</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between px-0 mt-3 border-top pt-3">
+                        <strong>Total</strong>
+                        <strong class="h5">R$ {{ total_carrinho|floatformat:2 }}</strong>
+                    </li>
+                </ul>
+                <div class="d-grid gap-2 mt-4">
+                    <a href="{% url 'checkout' %}" class="btn btn-purple">Finalizar Compra</a>
                 </div>
             </div>
         </div>
         {% else %}
-        <div class="col-12 text-center">
-            <p class="lead">Seu carrinho está vazio.</p>
-            <a href="{% url 'home' %}" class="btn btn-primary">Ver produtos</a>
+        <!-- Se o carrinho estiver vazio -->
+        <div class="col-12">
+            <div class="card-modern text-center py-5">
+                <h2 class="h4">Seu carrinho está vazio.</h2>
+                <p class="text-secondary">Adicione um plano para começar.</p>
+                <a href="{% url 'home' %}" class="btn btn-purple mt-3">Ver Planos</a>
+            </div>
         </div>
         {% endif %}
     </div>
